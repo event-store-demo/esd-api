@@ -39,6 +39,9 @@ public class RestConfig {
         @GetMapping( path = "/boards/{boardUuid}" )
         ResponseEntity<Board> board( @PathVariable( "boardUuid" ) UUID boardId );
 
+        @GetMapping( path = "/boards/{boardUuid}/history" )
+        ResponseEntity history( @PathVariable( "boardUuid" ) UUID boardId );
+
     }
 
 }

@@ -49,10 +49,23 @@ public class BoardService {
         return this.commandClient.deleteStory( boardUuid, storyUuid );
     }
 
-//    @HystrixCommand
+    @HystrixCommand
     public ResponseEntity<Board> board( final UUID boardUuid ) {
 
         return this.queryClient.board( boardUuid );
+    }
+
+    @HystrixCommand( fallbackMethod = "notImplemented" )
+    public ResponseEntity history( final UUID boardUuid ) {
+
+        return this.queryClient.history( boardUuid );
+    }
+
+    public ResponseEntity notImplemented( final UUID boardUuid ) {
+
+        return ResponseEntity
+                .notFound()
+                .build();
     }
 
 }

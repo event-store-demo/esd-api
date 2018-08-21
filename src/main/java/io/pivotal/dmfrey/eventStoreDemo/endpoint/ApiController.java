@@ -43,6 +43,17 @@ public class ApiController {
         return responseEntity;
     }
 
+    @GetMapping( path = "/{boardUuid}/history" )
+    public ResponseEntity history( @PathVariable( "boardUuid" ) UUID boardUuid ) {
+        log.info( "history : enter" );
+
+        ResponseEntity responseEntity = this.service.history( boardUuid );
+        log.info( "history : responseEntity=" + responseEntity );
+
+        log.info( "history : exit" );
+        return responseEntity;
+    }
+
     @PatchMapping( "/{boardUuid}" )
     public ResponseEntity renameBoard( @PathVariable( "boardUuid" ) UUID boardUuid, @RequestParam( "name" ) String name, final UriComponentsBuilder uriComponentsBuilder ) {
         log.info( "renameBoard : enter" );
