@@ -2,7 +2,9 @@ package io.pivotal.dmfrey.eventStoreDemo.endpoint;
 
 import io.pivotal.dmfrey.eventStoreDemo.domain.model.Board;
 import io.pivotal.dmfrey.eventStoreDemo.domain.service.BoardService;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,9 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping( "/boards" )
-@Slf4j
 public class ApiController {
 
+	private static final Logger log = LoggerFactory.getLogger( ApiController.class );
+	
     private final BoardService service;
 
     public ApiController( final BoardService service ) {

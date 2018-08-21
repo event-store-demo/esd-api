@@ -49,7 +49,7 @@ public class BoardService {
         return this.commandClient.deleteStory( boardUuid, storyUuid );
     }
 
-    @HystrixCommand
+//    @HystrixCommand
     public ResponseEntity<Board> board( final UUID boardUuid ) {
 
         return this.queryClient.board( boardUuid );

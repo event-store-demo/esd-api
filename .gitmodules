@@ -1,0 +1,4 @@
+[submodule "ci/pipeline"]
+	path = ci/pipeline
+	url = https://github.com/event-store-demo/esd-pipeline.git
+	branch = master
