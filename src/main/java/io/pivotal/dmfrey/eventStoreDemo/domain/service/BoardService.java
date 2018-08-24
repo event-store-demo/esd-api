@@ -2,9 +2,12 @@ package io.pivotal.dmfrey.eventStoreDemo.domain.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.pivotal.dmfrey.eventStoreDemo.domain.config.RestConfig;
+import io.pivotal.dmfrey.eventStoreDemo.domain.events.DomainEvent;
 import io.pivotal.dmfrey.eventStoreDemo.domain.model.Board;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BoardService {
@@ -55,17 +58,17 @@ public class BoardService {
         return this.queryClient.board( boardUuid );
     }
 
-    @HystrixCommand( fallbackMethod = "notImplemented" )
-    public ResponseEntity history( final UUID boardUuid ) {
+//    @HystrixCommand( fallbackMethod = "notImplemented" )
+    public ResponseEntity<List<DomainEvent>> history( final UUID boardUuid ) {
 
         return this.queryClient.history( boardUuid );
     }
 
-    public ResponseEntity notImplemented( final UUID boardUuid ) {
-
-        return ResponseEntity
-                .notFound()
-                .build();
-    }
+//    public ResponseEntity notImplemented( final UUID boardUuid ) {
+//
+//        return ResponseEntity
+//                .status( HttpStatus.I_AM_A_TEAPOT )
+//                .build();
+//    }
 
 }

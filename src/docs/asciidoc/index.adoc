@@ -33,6 +33,26 @@ include::{snippets}/get-board/http-request.adoc[]
 include::{snippets}/get-board/http-response.adoc[]
 
 
+== GET /boards/{boardUuid}/history - Get Board History
+
+* Canary - Will return an empty array when not calling the canary node.
+
+=== Path Variables
+.http
+include::{snippets}/get-board-history/path-parameters.adoc[]
+
+=== Request
+.curl
+include::{snippets}/get-board-history/curl-request.adoc[]
+
+.http
+include::{snippets}/get-board-history/http-request.adoc[]
+
+=== Success Responses
+.http
+include::{snippets}/get-board-history/http-response.adoc[]
+
+
 == PATCH /boards/{boardUuid} - Rename Board
 
 === Path Variables

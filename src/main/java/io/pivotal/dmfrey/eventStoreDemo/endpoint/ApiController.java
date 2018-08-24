@@ -1,14 +1,19 @@
 package io.pivotal.dmfrey.eventStoreDemo.endpoint;
 
+import feign.FeignException;
+import io.pivotal.dmfrey.eventStoreDemo.domain.events.DomainEvent;
 import io.pivotal.dmfrey.eventStoreDemo.domain.model.Board;
 import io.pivotal.dmfrey.eventStoreDemo.domain.service.BoardService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,14 +49,24 @@ public class ApiController {
     }
 
     @GetMapping( path = "/{boardUuid}/history" )
-    public ResponseEntity history( @PathVariable( "boardUuid" ) UUID boardUuid ) {
+    public ResponseEntity<List<DomainEvent>> history( @PathVariable( "boardUuid" ) UUID boardUuid ) {
         log.info( "history : enter" );
 
-        ResponseEntity responseEntity = this.service.history( boardUuid );
-        log.info( "history : responseEntity=" + responseEntity );
+        try {
 
-        log.info( "history : exit" );
-        return responseEntity;
+            ResponseEntity<List<DomainEvent>> responseEntity = this.service.history( boardUuid );
+            log.info( "history : responseEntity=" + responseEntity );
+
+            log.info( "history : exit" );
+            return responseEntity;
+
+        } catch( FeignException e ) {
+
+            return ResponseEntity
+                    .ok( new ArrayList<>() );
+
+        }
+
     }
 
     @PatchMapping( "/{boardUuid}" )

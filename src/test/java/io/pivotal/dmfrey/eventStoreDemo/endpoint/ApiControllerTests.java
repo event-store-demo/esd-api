@@ -1,5 +1,6 @@
 package io.pivotal.dmfrey.eventStoreDemo.endpoint;
 
+import io.pivotal.dmfrey.eventStoreDemo.domain.events.BoardInitialized;
 import io.pivotal.dmfrey.eventStoreDemo.domain.model.Board;
 import io.pivotal.dmfrey.eventStoreDemo.domain.service.BoardService;
 import org.junit.Test;
@@ -16,13 +17,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.UUID;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -155,7 +159,7 @@ public class ApiControllerTests {
     @Test
     public void testBoard() throws Exception {
 
-        when( this.service.board( any( UUID.class ) ) ).thenReturn( new ResponseEntity<>( craeteBoard(), HttpStatus.OK ) );
+        when( this.service.board( any( UUID.class ) ) ).thenReturn( new ResponseEntity<>( craeteBoard(), OK ) );
 
         this.mockMvc.perform( get( "/boards/{boardUuid}", UUID.randomUUID() ) )
                 .andExpect( status().isOk() )
@@ -170,6 +174,30 @@ public class ApiControllerTests {
 
 
         verify( this.service, times( 1 ) ).board( any( UUID.class ) );
+
+    }
+
+    @Test
+    public void testBoardHistory() throws Exception {
+
+        UUID boardUuid = UUID.randomUUID();
+        Instant now = Instant.now();
+        when( this.service.history( any( UUID.class ) ) ).thenReturn( new ResponseEntity<>( singletonList( new BoardInitialized( boardUuid, now ) ), OK ) );
+
+        this.mockMvc.perform( get( "/boards/{boardUuid}/history", boardUuid ) )
+                .andExpect( status().isOk() )
+                .andDo( print() )
+                .andExpect( jsonPath( "$" ).isArray() )
+                .andExpect( jsonPath( "$.[0].boardUuid", is( equalTo( boardUuid.toString() ) ) ) )
+                .andExpect( jsonPath( "$.[0].occurredOn", is( equalTo( now.toString() ) ) ) )
+                .andDo( document("get-board-history",
+                        pathParameters(
+                                parameterWithName( "boardUuid" ).description( "The unique id of the board" )
+                        )
+                ));
+
+
+        verify( this.service, times( 1 ) ).history( any( UUID.class ) );
 
     }
 
